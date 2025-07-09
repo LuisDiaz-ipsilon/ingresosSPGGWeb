@@ -3,12 +3,18 @@ import { useState } from "react";
 import { fetchMultas, pagarMulta, fetchTotal, pagarTotal } from "../lib/api";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { PagoModal } from "../components/PagoModal";
 
 export function MultasPage() {
   const [placa, setPlaca] = useState("");
   const [multas, setMultas] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [selected, setSelected] = useState<any>(null);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [montoModal, setMontoModal] = useState(0);
+  const [pagoCallback, setPagoCallback] = useState<() => Promise<void>>(async () => {});
+
 
   const consultar = async () => {
     const data = await fetchMultas(placa);
@@ -61,11 +67,15 @@ export function MultasPage() {
                   Mapa
                 </button>
                 <button
-                  className="bg-yellow-500 text-white px-2 rounded"
-                  onClick={async e => {
+                  className="bg-yellow-500 text-white px-2 py-1 rounded"
+                  onClick={e => {
                     e.stopPropagation();
-                    await pagarMulta(m.id_multa, m.monto);
-                    await consultar();
+                    setMontoModal(m.monto);
+                    setPagoCallback(() => async () => {
+                      await pagarMulta(m.id_multa, m.monto);
+                      await consultar(); // refresca la tabla y total
+                    });
+                    setModalOpen(true);
                   }}
                 >
                   Pagar
@@ -89,14 +99,18 @@ export function MultasPage() {
       </table>
 
       <button
-          className="bg-green-600 text-white px-4 rounded"
-          onClick={async () => {
+        className="bg-green-600 text-white px-4 rounded"
+        onClick={() => {
+          setMontoModal(total);
+          setPagoCallback(() => async () => {
             await pagarTotal(placa, total);
             await consultar();
-          }}
-        >
-          Pagar Total (${total.toFixed(2)})
-        </button>
+          });
+          setModalOpen(true);
+        }}
+      >
+        Pagar Total (${total.toLocaleString("en-US",{minimumFractionDigits:2})})
+      </button>
 
       {selected && (
         <div className="mt-6">
@@ -114,6 +128,13 @@ export function MultasPage() {
           </MapContainer>
         </div>
       )}
+
+      <PagoModal
+        open={modalOpen}
+        monto={montoModal}
+        onClose={() => setModalOpen(false)}
+        onConfirm={pagoCallback}
+      />
     </div>
   );
 }
