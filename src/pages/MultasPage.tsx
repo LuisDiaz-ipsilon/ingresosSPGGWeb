@@ -11,6 +11,7 @@ export function MultasPage() {
   const [total, setTotal] = useState(0);
   const [selected, setSelected] = useState<any>(null);
 
+  const [consultado, setConsultado] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [montoModal, setMontoModal] = useState(0);
   const [pagoCallback, setPagoCallback] = useState<() => Promise<void>>(async () => {});
@@ -21,6 +22,15 @@ export function MultasPage() {
     setMultas(data);
     const tot = await fetchTotal(placa);
     setTotal(tot.total_a_pagar);
+    setConsultado(true); 
+  };
+
+  const resetConsulta = () => {
+    setPlaca("");
+    setMultas([]);
+    setTotal(0);
+    setSelected(null);
+    setConsultado(false);
   };
 
   return (
@@ -31,87 +41,108 @@ export function MultasPage() {
           placeholder="Ingresa placa"
           value={placa}
           onChange={e => setPlaca(e.target.value)}
+          disabled={consultado}
         />
         <button
           className="bg-blue-600 text-white px-4 rounded"
           onClick={consultar}
+          disabled={consultado}
         >
           Consultar
         </button>
+        {consultado && (
+        <button
+          className="bg-indigo-600 text-white px-4 rounded hover:bg-indigo-700"
+          onClick={resetConsulta}
+        >
+          Consultar otro
+        </button>
+      )}
       </div>
 
-      <table className="w-full table-auto border-collapse">
-        <thead>
-          <tr className="bg-gray-100">
-            {["ID","Tipo","Monto","Expedido","Límite","Acciones"].map(h => (
-              <th key={h} className="border px-2 py-1">{h}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {multas.map(m => (
-            <tr
-              key={m.id_multa}
-              className="hover:bg-gray-50 cursor-pointer"
-            >
-              <td className="border px-2 py-1">{m.id_multa}</td>
-              <td className="border px-2 py-1">{m.tipo_multa}</td>
-              <td className="border px-2 py-1">${m.monto}</td>
-              <td className="border px-2 py-1">{m.fecha_expedida}</td>
-              <td className="border px-2 py-1">{m.fecha_limite}</td>
-              <td className="border px-2 py-1">
-                <button
-                  className="bg-blue-500 text-white px-2 py-1 rounded"
-                  onClick={() => setSelected(m)}
-                >
-                  Mapa
-                </button>
-                <button
-                  className="bg-yellow-500 text-white px-2 py-1 rounded"
-                  onClick={e => {
-                    e.stopPropagation();
-                    setMontoModal(m.monto);
-                    setPagoCallback(() => async () => {
-                      await pagarMulta(m.id_multa, m.monto);
-                      await consultar(); // refresca la tabla y total
-                    });
-                    setModalOpen(true);
-                  }}
-                >
-                  Pagar
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-        {multas.length > 0 && (
-          <tfoot>
-            <tr className="bg-gray-50">
-              <td colSpan={5} className="text-right font-semibold py-2 pr-4">
-                Total a pagar:
-              </td>
-              <td className="border px-2 py-2 font-bold">
-                ${total.toFixed(2)}
-              </td>
-            </tr>
-          </tfoot>
-        )}
-      </table>
 
-      <button
-        className="bg-green-600 text-white px-4 rounded"
-        onClick={() => {
-          setMontoModal(total);
-          setPagoCallback(() => async () => {
-            await pagarTotal(placa, total);
-            await consultar();
-          });
-          setModalOpen(true);
-        }}
-      >
-        Pagar Total (${total.toLocaleString("en-US",{minimumFractionDigits:2})})
-      </button>
+      {consultado && (
+        <>
+            <table className="w-full table-auto border-collapse">
+            <thead>
+              <tr className="bg-gray-100">
+                {["ID","Tipo","Monto","Expedido","Límite","Acciones"].map(h => (
+                  <th key={h} className="border px-2 py-1">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {multas.map(m => (
+                <tr
+                  key={m.id_multa}
+                  className="hover:bg-gray-50 cursor-pointer"
+                >
+                  <td className="border px-2 py-1">{m.id_multa}</td>
+                  <td className="border px-2 py-1">{m.tipo_multa}</td>
+                  <td className="border px-2 py-1">${m.monto}</td>
+                  <td className="border px-2 py-1">{m.fecha_expedida}</td>
+                  <td className="border px-2 py-1">{m.fecha_limite}</td>
+                  <td className="border px-2 py-1">
+                    <button
+                      className="bg-blue-500 text-white px-2 py-1 rounded"
+                      onClick={() => setSelected(m)}
+                    >
+                      Mapa
+                    </button>
+                    <button
+                      className="bg-yellow-500 text-white px-2 py-1 rounded"
+                      onClick={e => {
+                        e.stopPropagation();
+                        setMontoModal(m.monto);
+                        setPagoCallback(() => async () => {
+                          await pagarMulta(m.id_multa, m.monto);
+                          await consultar(); // refresca la tabla y total
+                        });
+                        setModalOpen(true);
+                      }}
+                    >
+                      Pagar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+            {multas.length > 0 && (
+              <tfoot>
+                <tr className="bg-gray-50">
+                  <td colSpan={5} className="text-right font-semibold py-2 pr-4">
+                    Total a pagar:
+                  </td>
+                  <td className="border px-2 py-2 font-bold">
+                    ${total.toFixed(2)}
+                  </td>
+                </tr>
+              </tfoot>
+            )}
+          </table>
 
+          <button
+            className={`mt-2 px-4 py-2 rounded ${
+              total > 0
+                ? "bg-green-600 text-white hover:bg-green-700"
+                : "bg-gray-300 text-gray-600 cursor-not-allowed"
+            }`}
+            disabled={total === 0}
+            onClick={() => {
+              setMontoModal(total);
+              setPagoCallback(() => async () => {
+                await pagarTotal(placa, total);
+                await consultar();
+              });
+              setModalOpen(true);
+            }}
+          >
+            Pagar Total (${total.toLocaleString("en-US",{minimumFractionDigits:2})})
+          </button>
+        </>
+      )}
+      
+      {/* Mapa */}
       {selected && (
         <div className="mt-6">
           <h2 className="text-lg font-semibold">Ubicación de multa {selected.id_multa}</h2>
