@@ -15,11 +15,12 @@ export async function fetchMultas(placa: string) {
     }>>;
   }
   
-  export async function pagarMulta(id_multa: number, monto: number) {
+  export async function pagarMulta(id_multa: number, monto: string) {
+    const montoNumber = parseFloat(monto.replace(/,/g, ""));
     const res = await fetch(`${URL_API}/api/multas/pagar`, {
       method: "POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({ IdMulta: id_multa, MontoPagar: monto }),
+      body: JSON.stringify({ IdMulta: id_multa, MontoPagar: montoNumber }),
     });
     if (!res.ok) throw new Error(await res.text());
     return res.json();
