@@ -32,15 +32,6 @@ export function MultasPage() {
         >
           Consultar
         </button>
-        <button
-          className="bg-green-600 text-white px-4 rounded"
-          onClick={async () => {
-            await pagarTotal(placa, total);
-            await consultar();
-          }}
-        >
-          Pagar Total (${total.toFixed(2)})
-        </button>
       </div>
 
       <table className="w-full table-auto border-collapse">
@@ -56,14 +47,19 @@ export function MultasPage() {
             <tr
               key={m.id_multa}
               className="hover:bg-gray-50 cursor-pointer"
-              onClick={() => setSelected(m)}
             >
               <td className="border px-2 py-1">{m.id_multa}</td>
               <td className="border px-2 py-1">{m.tipo_multa}</td>
-              <td className="border px-2 py-1">${m.monto.toFixed(2)}</td>
+              <td className="border px-2 py-1">${m.monto}</td>
               <td className="border px-2 py-1">{m.fecha_expedida}</td>
               <td className="border px-2 py-1">{m.fecha_limite}</td>
               <td className="border px-2 py-1">
+                <button
+                  className="bg-blue-500 text-white px-2 py-1 rounded"
+                  onClick={() => setSelected(m)}
+                >
+                  Mapa
+                </button>
                 <button
                   className="bg-yellow-500 text-white px-2 rounded"
                   onClick={async e => {
@@ -78,7 +74,29 @@ export function MultasPage() {
             </tr>
           ))}
         </tbody>
+        {multas.length > 0 && (
+          <tfoot>
+            <tr className="bg-gray-50">
+              <td colSpan={5} className="text-right font-semibold py-2 pr-4">
+                Total a pagar:
+              </td>
+              <td className="border px-2 py-2 font-bold">
+                ${total.toFixed(2)}
+              </td>
+            </tr>
+          </tfoot>
+        )}
       </table>
+
+      <button
+          className="bg-green-600 text-white px-4 rounded"
+          onClick={async () => {
+            await pagarTotal(placa, total);
+            await consultar();
+          }}
+        >
+          Pagar Total (${total.toFixed(2)})
+        </button>
 
       {selected && (
         <div className="mt-6">
