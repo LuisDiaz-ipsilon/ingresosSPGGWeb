@@ -84,6 +84,7 @@ export function MultasPage() {
         <div className="mt-6">
           <h2 className="text-lg font-semibold">Ubicación de multa {selected.id_multa}</h2>
           <MapContainer
+            key={selected.id_multa}
             center={[+selected.latitude, +selected.longitude]}
             zoom={16}
             style={{ height: 300 }}
