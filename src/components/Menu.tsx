@@ -8,11 +8,6 @@ export function Menu() {
         <div className="text-xl font-semibold">
           Ayuntamiento SPGG
         </div>
-        <div className="h-screen flex items-center justify-center bg-gray-100">
-      <button className="bg-blue-600 px-6 py-3 rounded-lg shadow-lg hover:bg-blue-700">
-        ¡Tailwind Funciona!
-      </button>
-    </div>
         {/* Enlaces de navegación */}
         <div className="space-x-6">
           <Link to="/multas" className="hover:underline">
