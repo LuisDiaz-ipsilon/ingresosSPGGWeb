@@ -25,7 +25,7 @@ export function PagoModal({ open, onClose, onConfirm, monto }: PagoModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-1000">
       <div className="bg-white rounded-lg w-full max-w-md p-6 space-y-4 shadow-xl">
         <h2 className="text-xl font-semibold text-blue-800">Pago con tarjeta</h2>
 
@@ -70,7 +70,7 @@ export function PagoModal({ open, onClose, onConfirm, monto }: PagoModalProps) {
 
             <div className="flex justify-end space-x-2 pt-4">
               <button
-                className="px-4 py-2 rounded border"
+                className="px-4 py-2 rounded border text-white"
                 onClick={onClose}
                 disabled={loading}
               >

@@ -6,7 +6,7 @@ export function Menu() {
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo o título */}
         <div className="text-xl font-semibold">
-          Ayuntamiento SPGG
+          SAN PEDRO
         </div>
         {/* Enlaces de navegación */}
         <div className="space-x-6">
@@ -18,9 +18,6 @@ export function Menu() {
           </Link>
           <Link to="/dashboard" className="hover:underline">
             Dashboard
-          </Link>
-          <Link to="/contacto" className="hover:underline">
-            Contacto
           </Link>
         </div>
       </div>
