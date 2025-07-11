@@ -1,4 +1,3 @@
-// src/pages/PredialesPage.tsx
 import { useState } from "react";
 import { fetchPrediales, pagarPredial, fetchTotalPrediales, pagarTotalPrediales, downloadPdfByDomicilio, enviarPdfPredialPorCorreo } from "../lib/api";
 import { PagoModal } from "../components/PagoModal";

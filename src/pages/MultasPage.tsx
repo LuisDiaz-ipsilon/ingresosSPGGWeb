@@ -1,4 +1,3 @@
-// src/pages/MultasPage.tsx
 import { useState } from "react";
 import { fetchMultas, pagarMulta, fetchTotal, pagarTotal, downloadPdfByPlaca, enviarPdfPorCorreo } from "../lib/api";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";

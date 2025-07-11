@@ -22,22 +22,19 @@ export default function DashboardPage() {
 
   if (ingresos.isError) return <p>Error: {String(ingresos.error)}</p>;
 
-  /* ---------- 1. KPI Cards ---------- */
   const kpis = [
     { label: "Morosidad Prediales (%)", value: morosidadGbl.data!.indice_morosidad_prediales },
     { label: "Morosidad Multas (%)",    value: morosidadGbl.data!.indice_morosidad_multas },
-    { label: "Saldo Prediales ($)",     value: saldoPred.data!.saldo_por_pagar },
-    { label: "Saldo Multas ($)",        value: saldoMultas.data!.saldo_por_pagar }
+    { label: "Por cobrarPrediales ($)",     value: saldoPred.data!.saldo_por_pagar },
+    { label: "Por cobrar Multas ($)",        value: saldoMultas.data!.saldo_por_pagar }
   ];
 
-  /* ---------- 2. Line Chart data ---------- */
   const ingresosData = ingresos.data!.map(d => ({
     mes: d.mes_inicio.slice(0,7), // YYYY-MM
     expedido: d.expedido_total,
     pagado:   d.pagado_total
   }));
 
-  /* ---------- 3. Bar Chart data ---------- */
   const morosidadData = morosidadMes.data!.map(d => ({
     mes: d.mes_inicio.slice(0,7),
     indice: d.indice_morosidad
@@ -58,7 +55,7 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Ingresos Line Chart */}
+      {/* Ingresos Chart */}
       <div className="bg-white shadow rounded p-4 h-72">
         <h2 className="font-semibold mb-2">Ingresos últimos 6 meses</h2>
         <ResponsiveContainer width="100%" height="100%">
@@ -74,7 +71,7 @@ export default function DashboardPage() {
         </ResponsiveContainer>
       </div>
 
-      {/* Morosidad Bar Chart */}
+      {/* Morosidad */}
       <div className="bg-white shadow rounded p-4 h-72">
         <h2 className="font-semibold mb-2">% Morosidad por mes</h2>
         <ResponsiveContainer width="100%" height="100%">
@@ -99,7 +96,7 @@ export default function DashboardPage() {
               <CircleMarker
                 key={`${z.grid_x}-${z.grid_y}`}
                 center={[z.center_latitude, z.center_longitude]}
-                radius={10}
+                radius={z.indice_morosidad-80}
                 pathOptions={{ fillOpacity: 0.5 }}
               >
                 <LTooltip>
@@ -119,7 +116,7 @@ export default function DashboardPage() {
               <CircleMarker
                 key={`${z.grid_x}-${z.grid_y}`}
                 center={[z.center_latitude, z.center_longitude]}
-                radius={Math.min(4 + z.total_exceso_velocidad, 20)} // radio proporcional
+                radius={Math.min(z.total_exceso_velocidad)}
                 pathOptions={{ color:"red", fillOpacity:0.4 }}
               >
                 <LTooltip>

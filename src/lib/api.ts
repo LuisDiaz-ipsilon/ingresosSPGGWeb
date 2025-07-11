@@ -141,21 +141,7 @@ export async function pagarMulta(id_multa: number, monto: string) {
       fecha_envio: string;
     }>;
   }
-// export async function fetchTotal(placa: string) {
-//   const res = await fetch(`${URL_API}/api/multas/total/${placa}`);
-//   if (!res.ok) throw new Error(await res.text());
-//   return res.json() as Promise<{ placa:string; total_a_pagar:number }>;
-// }
 
-// export async function pagarTotal(placa: string, monto: number) {
-//   const res = await fetch(`${URL_API}/api/multas/pagar-total`, {
-//     method: "POST",
-//     headers: {"Content-Type":"application/json"},
-//     body: JSON.stringify({ Placa: placa, MontoPagar: monto }),
-//   });
-//   if (!res.ok) throw new Error(await res.text());
-//   return res.json();
-// }
 
 //DASHBOARD
 export interface IngresoUlt6Meses {
