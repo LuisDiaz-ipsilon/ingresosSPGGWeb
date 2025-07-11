@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { MultasPage } from "./pages/MultasPage";
 import { Menu } from "./components/Menu";
 import { Footer } from "./components/Footer";
+import DashboardPage from './pages/DashboardPage';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,6 +18,7 @@ function App() {
       <main className="container mx-auto py-6">
         <Routes>
           <Route path="/multas" element={<MultasPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route index element={<MultasPage />} />
         </Routes>
       </main>
