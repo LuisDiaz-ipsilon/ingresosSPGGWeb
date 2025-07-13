@@ -30,14 +30,6 @@ export function MultasPage() {
     setConsultado(true); 
   };
 
-  const resetConsulta = () => {
-    setPlaca("");
-    setMultas([]);
-    setTotal(0);
-    setSelected(null);
-    setConsultado(false);
-  };
-
   const enviarPdf = async () => {
     if (!email.trim()) {
       alert("Por favor ingrese un email válido");

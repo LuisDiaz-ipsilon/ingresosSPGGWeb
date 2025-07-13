@@ -32,13 +32,6 @@ export function PredialesPage() {
     setConsultado(true); 
   };
 
-  const resetConsulta = () => {
-    setDomicilioId("");
-    setPrediales([]);
-    setTotal(0);
-    setConsultado(false);
-  };
-
   const enviarPdf = async () => {
     if (!email.trim()) {
       alert("Por favor ingrese un email válido");
