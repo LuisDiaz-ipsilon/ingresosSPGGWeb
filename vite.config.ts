@@ -3,5 +3,10 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/pagos/', 
+  server: {
+    fs: { strict: false },
+    hmr: { protocol: 'ws' },
+  },
   plugins: [react()],
 })

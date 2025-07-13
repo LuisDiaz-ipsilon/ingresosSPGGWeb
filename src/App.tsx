@@ -15,7 +15,6 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
         <Menu />
         <main className="container mx-auto py-6">
           <Routes>
@@ -26,7 +25,6 @@ function App() {
           </Routes>
         </main>
         <Footer />
-      </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )

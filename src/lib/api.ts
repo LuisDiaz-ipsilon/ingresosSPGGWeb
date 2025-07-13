@@ -1,7 +1,9 @@
-const URL_API = "https://localhost:7131";
+const URL_API = import.meta.env.VITE_API_URL;
+
+console.log('URL_API=', URL_API);
 
 export async function fetchMultas(placa: string) {
-  const res = await fetch(`${URL_API}/api/multas/${placa}`);
+  const res = await fetch(`${URL_API}/api/multas/${placa}`, {cache: 'no-store'});
   if (!res.ok) throw new Error(await res.text());
   return res.json() as Promise<Array<{
     id_multa: number;
