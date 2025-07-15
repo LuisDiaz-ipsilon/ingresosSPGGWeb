@@ -62,7 +62,16 @@ export default function DashboardPage() {
           <AreaChart data={ingresosData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
-            <YAxis />
+            <YAxis  
+              width={80}
+              tickFormatter={(value) =>
+                value >= 1000
+                  ? `${(value / 1000).toLocaleString("en-US", {
+                      maximumFractionDigits: 1,
+                    })} K`
+                  : value.toString()
+              }
+            />
             <Tooltip />
             <Legend />
             <Area type="monotone" dataKey="expedido" stackId="1" name="Expedido"  fillOpacity={0.6} />
