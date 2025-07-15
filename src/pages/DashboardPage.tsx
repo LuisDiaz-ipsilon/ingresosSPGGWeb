@@ -25,8 +25,8 @@ export default function DashboardPage() {
   const kpis = [
     { label: "Morosidad Prediales (%)", value: morosidadGbl.data!.indice_morosidad_prediales },
     { label: "Morosidad Multas (%)",    value: morosidadGbl.data!.indice_morosidad_multas },
-    { label: "Por cobrarPrediales ($)",     value: saldoPred.data!.saldo_por_pagar },
-    { label: "Por cobrar Multas ($)",        value: saldoMultas.data!.saldo_por_pagar }
+    { label: "Por Cobrar Prediales ($)",     value: saldoPred.data!.saldo_por_pagar },
+    { label: "Por Cobrar Multas ($)",        value: saldoMultas.data!.saldo_por_pagar }
   ];
 
   const ingresosData = ingresos.data!.map(d => ({
