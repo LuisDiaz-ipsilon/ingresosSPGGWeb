@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchPrediales, pagarPredial, fetchTotalPrediales, pagarTotalPrediales, downloadPdfByDomicilio, enviarPdfPredialPorCorreo } from "../lib/api";
 import { PagoModal } from "../components/PagoModal";
 
@@ -17,6 +17,23 @@ export function PredialesPage() {
   const [email, setEmail] = useState("");
   const [enviandoEmail, setEnviandoEmail] = useState(false);
   const [mensajeEnvio, setMensajeEnvio] = useState("");
+
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const fechaFormateada = now.toLocaleString("es-MX", {
+    weekday: "long",
+    year:    "numeric",
+    month:   "2-digit",
+    day:     "2-digit",
+    hour:    "2-digit",
+    minute:  "2-digit",
+    second:  "2-digit"
+  });
 
   const consultar = async () => {
     const domicilioNumber = parseInt(domicilioId);
@@ -61,6 +78,10 @@ export function PredialesPage() {
     <div className="p-6 space-y-4">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Consulta de Prediales</h1>
       
+      <p className="text-sm text-gray-600 mb-2">
+        {fechaFormateada}
+      </p>
+
       <div className="flex space-x-2">
         <input
           className="border p-2 rounded flex-1"
@@ -75,7 +96,7 @@ export function PredialesPage() {
         >
           Consultar
         </button>
-        {consultado && (
+        {consultado && prediales.length !== 0 && (
           <>
             <button
               className="bg-green-600 text-white px-4 rounded"
@@ -93,7 +114,13 @@ export function PredialesPage() {
         )}
       </div>
 
-      {consultado && (
+      {consultado && prediales.length === 0 &&(
+        <p className="text-center text-gray-600 py-4">
+          No hay pagos de predial pendiente para el domcilio indicado. <strong>{domicilioId}</strong>
+        </p>
+      )}
+
+      {consultado && prediales.length !== 0 && (
         <>
           <table className="w-full table-auto border-collapse">
             <thead>
@@ -107,14 +134,17 @@ export function PredialesPage() {
               {prediales.map(p => (
                 <tr
                   key={p.id_predial}
-                  className="hover:bg-gray-50"
+                  className={`hover:bg-gray-200 cursor-pointer ${p.pagado ? 'opacity-50' : ''}`}
                 >
                   <td className="border px-2 py-1">{p.id_predial}</td>
                   <td className="border px-2 py-1">${p.monto}</td>
                   <td className="border px-2 py-1">{p.fecha_expedida}</td>
                   <td className="border px-2 py-1">{p.fecha_limite}</td>
                   <td className="border px-2 py-1">
-                    <button
+                    {p.pagado ? (
+                      <button disabled={true} className="!bg-gray-700 px-2 py-1 rounded !text-green-600 !font-semibold !cursor-not-allowed">Pagado</button>
+                    ): (
+                      <button
                       className="bg-yellow-500 text-white px-2 py-1 rounded"
                       onClick={e => {
                         e.stopPropagation();
@@ -128,6 +158,7 @@ export function PredialesPage() {
                     >
                       Pagar
                     </button>
+                    )}
                   </td>
                 </tr>
               ))}

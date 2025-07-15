@@ -12,6 +12,7 @@ export async function fetchMultas(placa: string) {
     fecha_limite: string;
     latitude: string;
     longitude: string;
+    pagado: boolean;
   }>>;
 }
   
@@ -82,6 +83,7 @@ export async function pagarMulta(id_multa: number, monto: string) {
       monto: string;
       fecha_expedida: string;
       fecha_limite: string;
+      pagado: boolean;
     }>>;
   }
   
